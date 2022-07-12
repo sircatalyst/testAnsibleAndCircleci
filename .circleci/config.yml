@@ -118,7 +118,7 @@ jobs:
             else
               return 1
             fi
-      - destroy_environment      
+      # - destroy_environment      
   
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
@@ -222,7 +222,7 @@ workflows:
       #       - upload_file
       # - create_infrastructure
       # - configure_infrastructure
-      # - smoke_test
+      - smoke_test
       # - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
