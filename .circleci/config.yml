@@ -239,7 +239,7 @@ workflows:
       # - add_ec2_Ips_to_inventory:
       #     requires: 
       #       - create_infrastructure
-      - configure_infrastructure:
+      - configure_infrastructure
           # requires: 
           #   - add_ec2_Ips_to_inventory
       # - smoke_test
