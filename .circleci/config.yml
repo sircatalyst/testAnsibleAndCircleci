@@ -79,8 +79,9 @@ jobs:
               --region us-east-1
       # Fail the job intentionally to simulate an error.
       # Uncomment the line below if you want to fail the current step
-      # - run: return 1
-  #     - destroy_environment
+      - run: return 1
+      - destroy_environment
+        when: on_fail
 
 
   # Exercise: Config and Deployment
@@ -102,19 +103,19 @@ jobs:
             ansible-playbook -i inventory main.yml
 
   # Add newly created IPs to inventory file
-  add_ec2_Ips_to_inventory: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Get IP of newly created ec2 and add to inventory
-          command: |
-            aws ec2 describe-instances \
-            \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:Project,Values=udacity" \
-            --output text >> inventory
+  # add_ec2_Ips_to_inventory: 
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Get IP of newly created ec2 and add to inventory
+  #         command: |
+  #           aws ec2 describe-instances \
+  #           \
+  #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
+  #           --filters "Name=tag:Project,Values=udacity" \
+  #           --output text >> inventory
 
   # Exercise: Smoke Testing
   # smoke_test:
@@ -236,12 +237,12 @@ workflows:
       #     requires:
       #       - upload_file
       - create_infrastructure
-      - add_ec2_Ips_to_inventory:
-          requires: 
-            - create_infrastructure
+      # - add_ec2_Ips_to_inventory:
+      #     requires: 
+      #       - create_infrastructure
       - configure_infrastructure:
-          requires: 
-            - add_ec2_Ips_to_inventory
+          # requires: 
+          #   - add_ec2_Ips_to_inventory
       # - smoke_test
       # - create_and_deploy_front_end
       # - promote_to_production:
