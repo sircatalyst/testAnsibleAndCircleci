@@ -10,12 +10,12 @@ orbs:
 
 commands:
   # Exercise: Reusable Job Code
-  print_pipeline_id:
-    parameters:
-      id: 
-        type: string
-    steps:
-      - run: echo << parameters.id >>
+  # print_pipeline_id:
+  #   parameters:
+  #     id: 
+  #       type: string
+  #   steps:
+  #     - run: echo << parameters.id >>
 
   # Exercise - Rollback
   destroy_environment:
@@ -34,34 +34,34 @@ jobs:
   # Exercise: Creating a Simple Workflow
   # Exercise: Environment Variables
   # Exercise: Reusable Job Code 
-  print_greetings:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - print_pipeline_id:
-          id: << pipeline.id >>
-      - run: echo HELLO
-      - run: echo WORLD
-      - run: echo $_env_name
+  # print_greetings:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - print_pipeline_id:
+  #         id: << pipeline.id >>
+  #     - run: echo HELLO
+  #     - run: echo WORLD
+  #     - run: echo $_env_name
 
   # Exercise: Sharing Files (Job names may have changed)
-  upload_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
-      - persist_to_workspace:
-          root: ~/
-          paths: 
-            - output.txt  
+  # upload_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
+  #     - persist_to_workspace:
+  #         root: ~/
+  #         paths: 
+  #           - output.txt  
 
-  download_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt 
+  # download_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run: cat ~/output.txt 
  
   # Exercise: Infrastructure Creation
   # Exercise - Rollback
@@ -102,23 +102,23 @@ jobs:
             ansible-playbook -i inventory main.yml
 
   # Exercise: Smoke Testing
-  # smoke_test:
-  #   docker:
-  #     - image: alpine:latest
-  #   steps:
-  #     - run: apk add --update curl
-  #     - run:
-  #         name: smoke test
-  #         command: |
-  #           URL="https://blog.udacity.com/"
-  #           # Test if website exists
-  #           if curl -s --head ${URL} 
-  #           then
-  #             return 0
-  #           else
-  #             return 1
-  #           fi
-  #     - destroy_environment      
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: apk add --update curl
+      - run:
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
+      - destroy_environment      
   
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
@@ -221,7 +221,8 @@ workflows:
       #     requires:
       #       - upload_file
       # - create_infrastructure
-      - configure_infrastructure
+      # - configure_infrastructure
+      # - smoke_test
       # - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
