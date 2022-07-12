@@ -118,7 +118,7 @@ jobs:
             # else
             return 1
             # fi
-      - destroy_environment      
+      # - destroy_environment      
   
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
