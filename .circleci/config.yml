@@ -84,22 +84,37 @@ jobs:
 
 
   # Exercise: Config and Deployment
-  # configure_infrastructure: 
-  #   docker:
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["02:34:20:f6:3a:66:be:50:ea:01:bd:2a:d7:26:9f:86"] # You can get this ID in the section where you registered the SSH Key
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # install the dependencies needed for your playbook
-  #           apk add --update ansible 
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           ansible-playbook -i inventory main.yml
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["02:34:20:f6:3a:66:be:50:ea:01:bd:2a:d7:26:9f:86"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory main.yml
+
+  # Add newly created IPs to inventory file
+  add_ec2_Ips_to_inventory: 
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Get IP of newly created ec2 and add to inventory
+          command: |
+            aws ec2 describe-instances \
+            \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Project,Values=udacity" \
+            --output text >> inventory
 
   # Exercise: Smoke Testing
   # smoke_test:
@@ -221,7 +236,7 @@ workflows:
       #     requires:
       #       - upload_file
       - create_infrastructure
-      # - configure_infrastructure
+      - configure_infrastructure
       # - smoke_test
       # - create_and_deploy_front_end
       # - promote_to_production:
