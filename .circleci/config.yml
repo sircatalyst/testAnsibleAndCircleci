@@ -65,41 +65,41 @@ jobs:
  
   # Exercise: Infrastructure Creation
   # Exercise - Rollback
-  # create_infrastructure: 
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Create Cloudformation Stack
-  #         command: |
-  #           aws cloudformation deploy \
-  #             --template-file template.yml \
-  #             --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-  #             --region us-east-1
-  #     # Fail the job intentionally to simulate an error.
-  #     # Uncomment the line below if you want to fail the current step
-  #     # - run: return 1
+  create_infrastructure: 
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --region us-east-1
+      # Fail the job intentionally to simulate an error.
+      # Uncomment the line below if you want to fail the current step
+      # - run: return 1
   #     - destroy_environment
 
 
   # Exercise: Config and Deployment
-  configure_infrastructure: 
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["02:34:20:f6:3a:66:be:50:ea:01:bd:2a:d7:26:9f:86"] # You can get this ID in the section where you registered the SSH Key
-      - run:
-          name: Install dependencies
-          command: |
-            # install the dependencies needed for your playbook
-            apk add --update ansible 
-      - run:
-          name: Configure server
-          command: |
-            ansible-playbook -i inventory main.yml
+  # configure_infrastructure: 
+  #   docker:
+  #     - image: python:3.7-alpine3.11
+  #   steps:
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints: ["02:34:20:f6:3a:66:be:50:ea:01:bd:2a:d7:26:9f:86"] # You can get this ID in the section where you registered the SSH Key
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           # install the dependencies needed for your playbook
+  #           apk add --update ansible 
+  #     - run:
+  #         name: Configure server
+  #         command: |
+  #           ansible-playbook -i inventory main.yml
 
   # Exercise: Smoke Testing
   smoke_test:
@@ -110,15 +110,15 @@ jobs:
       - run:
           name: smoke test
           command: |
-            URL="https://blog.udacity.com/"
-            # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
-      # - destroy_environment      
+            # URL="https://blog.udacity.com/"
+            # # Test if website exists
+            # if curl -s --head ${URL} 
+            # then
+            #   return 0
+            # else
+            return 1
+            # fi
+      - destroy_environment      
   
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
@@ -220,7 +220,7 @@ workflows:
       # - download_file:
       #     requires:
       #       - upload_file
-      # - create_infrastructure
+      - create_infrastructure
       # - configure_infrastructure
       - smoke_test
       # - create_and_deploy_front_end
