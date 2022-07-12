@@ -237,11 +237,11 @@ workflows:
       #       - upload_file
       - create_infrastructure
       - add_ec2_Ips_to_inventory:
-        requires: 
-          - create_infrastructure
+          requires: 
+            - create_infrastructure
       - configure_infrastructure:
-        requires: 
-          - add_ec2_Ips_to_inventory
+          requires: 
+            - add_ec2_Ips_to_inventory
       # - smoke_test
       # - create_and_deploy_front_end
       # - promote_to_production:
